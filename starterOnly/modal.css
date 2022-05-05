@@ -148,6 +148,13 @@ img {
   .hero-section .hero-content{
     width: 400px;
   }
+  .content{
+    top: 60px;
+  }
+  #bground {
+    background-color: transparent;
+  }
+ 
 
 } 
 
@@ -217,6 +224,31 @@ main {
   width: 100%;
   overflow: auto;
   background-color: rgba(26, 39, 156, 0.4);
+}
+
+.form__container{
+  height: 850px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+
+.form__container div{
+  height: 100%;
+  font-size: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+#close-btn{
+  width: 182px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .content {
