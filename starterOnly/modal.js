@@ -13,6 +13,7 @@ const modalBtn = document.querySelectorAll(".modal-btn");
 const formData = document.querySelectorAll(".formData");
 const closeBtn = document.querySelectorAll(".close");//creation variable qui va permettre de fermer la modale
 const submitForm = document.getElementById("form");//on récupère le formulaire
+const formContainer = document.getElementById("form-container");//on récupère le container du formulaire
 
 // launch modal event
 modalBtn.forEach((btn) => btn.addEventListener("click", launchModal));
@@ -20,12 +21,29 @@ closeBtn.forEach((btn) => btn.addEventListener("click", closeModal));//permet de
 submitForm.addEventListener("submit", validateForm);//ajout un écouteur d'évènement de type submit sur le formulaire
 
 
-// launch modal form
+// launch modal form permet d'afficher la modale 
 function launchModal() {
   modalbg.style.display = "block";
+  submitForm.reset();
 }
 function closeModal() {
-  modalbg.style.display = "none";//fonction fermer la modale
+  // supprime le message de validation
+  // --> ajoute un id a l'element contenant le message
+  // --> il faut veiller a ce que l'element existe
+  //     -> recupere l'element avec get...
+  //       si n'existe pas rien faire
+  //       si existe le supprimer de form-container
+  modalbg.style.display = "none";//faitdisparaître la modale
+  const closeModalMessage = document.getElementById("message-container");
+  if (closeModalMessage !== null) {               //on fait en sorte que le message de validation ne se réaffiche pas lorsqu'on utilise l'élément "close" pour fermer la modale puis qu'on l'ouvre de nouveau pour s'inscrire
+    formContainer.removeChild(closeModalMessage)
+  }
+  document.querySelectorAll('.formData').forEach(//on supprime les messages d'erreur qui s'affichent si le formulaire a été fermer alors qu'il n'était pas valid
+    (el) => el.setAttribute('data-error-visible', false)
+  )
+  submitForm.style.display = "block";
+  formContainer.classList.remove('form__container');
+
 }
 
 //fonction qui permet d'afficher  le message d'erreur après invalidation d' un champs
@@ -55,10 +73,10 @@ function validateForm(event) {
   const firstCheckbox = event.target.condition;
   const secondCheckbox = event.target.newsletter;
   if (firstName.value.length < 3) {                     //erreur:prénom contenant strictement moins de 3 lettres
-    displayError(firstName, "Le prénom doit contenir plus de deux lettres")
-     isFormValid = false
+    displayError(firstName, "Le prénom doit contenir plus de deux lettres")//le champs est invalide, le message d'erreur à afficher
+     isFormValid = false                                                   //le formulaire est invalide
   } else {
-    hideError(firstName)
+    hideError(firstName)                                                    //on affiche rien qd le champs est valid
   }
 
   if (lastName.value.length < 3) {                      //idem
@@ -114,41 +132,32 @@ function validateForm(event) {
     hideError(firstCheckbox)
   }
 
-  const formContainer = document.getElementById("form-container");
+  //si le formulaire est valide, on affiche le message de validation et le bouton pour le fermer 
   console.log(formContainer)
   if(isFormValid){
-    const messageContainer = document.createElement("div");
-    messageContainer.innerHTML = "<div>Merci pour<br> votre inscription</div><button id='close-btn' class='btn-submit btn-signup'>Fermer</button>";
+    const messageContainer = document.createElement("div"); //on crée l 'élément qui va contenir le message de validation d'inscription
+    messageContainer.setAttribute("id", "message-container")//on lui attribue un id
+    messageContainer.innerHTML = "<div>Merci pour<br> votre inscription</div><button id='close-btn' class='btn-submit btn-signup'>Fermer</button>";//cette propriété définie la syntaxe html dse descendants de l' élt ici le message de validation et le bouton"fermer"
     console.log( messageContainer.innerHTML);
-    formContainer.appendChild(messageContainer);
+    formContainer.appendChild(messageContainer);//on ajoute l'élement enfant à son élément parent(modal body)
     console.log(formContainer.appendChild(messageContainer));
-    submitForm.style.display = "none";
-    formContainer.classList.add("form__container");
-    const button = document.getElementById("close-btn");
-    function closeSubmit(){
-      formContainer.removeChild(messageContainer);
-      submitForm.style.display = "block";
+    submitForm.style.display = "none";//le formulaire doit disparaître de la modale, on le cache
+    formContainer.classList.add("form__container");//On ajoute une classe à l'élément
+    const button = document.getElementById("close-btn");//on récupère l 'objet button grâce à son id
+    function closeSubmit(){ //on implémente la fonction qui va permettre de fermer le message de validation
+      formContainer.removeChild(messageContainer); //on supprime l'élément qui contient le message
+      submitForm.style.display = "block"; //on permet au formulaire de s'afficher à nouveau
       closeModal()
       formContainer.classList.remove("form__container")
-      submitForm.reset()
+      submitForm.reset()                                      //réinitialisation du formulaire
     }
 
-    button.addEventListener("click", closeSubmit);
+    button.addEventListener("click", closeSubmit)        //on ajoute un écouteur d'évènement au click sur le bouton qui va cacher la modale
+    
   
-
   
-    // il faut creer un element qui contien le message et le bouton
-    // https://developer.mozilla.org/fr/docs/Web/API/Document/createElement 
-    // https://developer.mozilla.org/fr/docs/Web/API/Element/innerHTML
-    // il faut ajouter l'element dans modal body
-    // https://developer.mozilla.org/fr/docs/Web/API/Node/appendChild
-    // il faut cacher le formulaire
-    // css -< display:none
-    // il faut ajouter un evenement click sur le bouton qui
-    // - va cacher la modal -> closeModal
-    // - reafficher le formulaire -> css display: inline-block
-    // - enlever le message de validation 
-    // https://developer.mozilla.org/fr/docs/Web/API/Node/removeChild
+  
+   
   }
  
 }
