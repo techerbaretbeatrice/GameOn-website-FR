@@ -62,8 +62,6 @@ function hideError(element) {
 function validateForm(event) {
   let isFormValid = true //formulaire valide état initial supposé valide jusqu'à erreur
   event.preventDefault()                      //empêche le comportement par défault de l'évènement submit qui envoie les données au serveur, validation côté clients
-  console.log(event)
-  console.log(event.target.first.parentNode)
   const firstName = event.target.first;       //le formulaire contient tous les champs de ses éléments html, on utilise donc l'attribut name des inputs pour cibler les champs  
   const lastName = event.target.last;
   const emailField = event.target.email;
@@ -106,7 +104,7 @@ function validateForm(event) {
   }
   //utilise le constructeur Number pour définir le type de numberOfParticipation.value comme un nombre
   //erreur: valeur<0 ou vide ou non définie
-  console.log(location)
+
   if (Number(numberOfParticipation.value) < 0 || numberOfParticipation.value === "" || numberOfParticipation.value === undefined) {
     displayError(numberOfParticipation, "Veuillez saisir une quantité")
      isFormValid = false
@@ -117,7 +115,6 @@ function validateForm(event) {
   //
   const check = document.getElementsByName("location")
   const isOneChecked = Array.from(check).some((itemLocation) => itemLocation.checked === true)
-  console.log(isOneChecked)
   if (isOneChecked === false) {
     displayError(check[0], "Selectionez un lieu de votre choix")
     isFormValid = false
@@ -133,14 +130,11 @@ function validateForm(event) {
   }
 
   //si le formulaire est valide, on affiche le message de validation et le bouton pour le fermer 
-  console.log(formContainer)
   if(isFormValid){
     const messageContainer = document.createElement("div"); //on crée l 'élément qui va contenir le message de validation d'inscription
     messageContainer.setAttribute("id", "message-container")//on lui attribue un id
     messageContainer.innerHTML = "<div>Merci pour<br> votre inscription</div><button id='close-btn' class='btn-submit btn-signup'>Fermer</button>";//cette propriété définie la syntaxe html dse descendants de l' élt ici le message de validation et le bouton"fermer"
-    console.log( messageContainer.innerHTML);
     formContainer.appendChild(messageContainer);//on ajoute l'élement enfant à son élément parent(modal body)
-    console.log(formContainer.appendChild(messageContainer));
     submitForm.style.display = "none";//le formulaire doit disparaître de la modale, on le cache
     formContainer.classList.add("form__container");//On ajoute une classe à l'élément
     const button = document.getElementById("close-btn");//on récupère l 'objet button grâce à son id
